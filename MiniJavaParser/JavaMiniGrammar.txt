@@ -1,0 +1,45 @@
+SOURCE_CODE = IMPORT_STMT CLASS_DCLR | CLASS_DCLR
+IMPORT_STMT = import #api_identifier * ;
+CLASS_DCLR = class #identifier { CLASS_DEF }
+CLASS_DEF = MAIN_METHOD | #e
+MAIN_METHOD = ACCESS STATIC TYPE main ( PARAM ) EXCEPTIONS
+{ STMT }
+ACCESS = public | private | protected | #e
+STATIC = static | #e
+PARAM = TYPE PARAM` | #e
+PARAM` = #identifier [ ] | [ ] #identifier
+TYPE = int | void | String
+EXCEPTIONS = throws #api_identifier | #e
+STMT = VAR_DCLR ; STMT | CALL_STMT ; STMT | ASSIGN_STMT ; STMT | CTRL_STMT STMT | { STMT } | #e
+VAR_DCLR = TYPE #identifier VAR_INIT MORE_VAR_DCLR
+VAR_INIT = #identifier = VAR_INITIAL_VAL | = #e
+VAR_INITIAL_VAL = EXPR | NEW
+NEW = new TYPE ( NEW`
+NEW` = ) | NEW ) | #api_identifier )
+MORE_VAR_DCLR = , #identifier VAR_INIT MORE_VAR_DCLR| #e
+CALL_STMT = METHOD_NAME ( ARGS )
+METHOD_NAME = #api_identifier
+ARGS = ARG MORE_ARGS
+MORE_ARGS = , ARGS | + ARGS | #e
+ARG = CALL_STMT | #string | #identifier | #e
+ASSIGN_STMT = #identifier ASSIGN_STMT`
+ASSIGN_STMT`= #identifier = ASSIGN_SRC | ASSIGN_OP EXPR
+ASSIGN_SRC = CALL_STMT | EXPR
+ASSIGN_OP = += | -= | *= | /= | %=
+EXPR = TERM EXPR`
+EXPR` = ADD_OP TERM EXPR` | #e
+ADD_OP = + | -
+TERM = FACTOR TERM`
+TERM` = MUL_OP FACTOR TERM` | #e
+MUL_OP = * | / | %
+FACTOR = ( EXPR ) | #identifier | #number
+CTRL_STMT = IF_STMT | WHILE_STMT | FOR_STMT
+IF_STMT = if ( TEST ) STMT_SINGLE ELSE_PART
+ELSE_PART = else STMT_SINGLE | #e
+STMT_SINGLE = VAR_DCLR ; | CALL_STMT ; | ASSIGN_STMT ; | CTRL_STMT ; | { STMT }
+TEST = EXPR TEST_OP TEST_NORM
+TEST_NORM = #identifier| #number | ( EXPR )
+TEST_OP = < | > | >= | <= | ==
+WHILE_STMT = while ( TEST ) STMT_SINGLE
+FOR_STMT = for ( ASSIGN_STMT ; TEST ; U_EXPR ) STMT_SINGLE
+U_EXPR = #identifier ++ | #identifier -- | ++ #identifier | -- #identifier
